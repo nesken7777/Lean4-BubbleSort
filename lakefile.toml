@@ -1,0 +1,10 @@
+name = "BubbleSort"
+version = "0.1.0"
+defaultTargets = ["bubblesort"]
+
+[[lean_lib]]
+name = "BubbleSort"
+
+[[lean_exe]]
+name = "bubblesort"
+root = "Main"
