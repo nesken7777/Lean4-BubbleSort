@@ -42,7 +42,7 @@ def bubbleSort [Ord α] (arr : Array α) : Array α :=
       arr
   termination_by arr.size - i
   decreasing_by
-    let rec loop₂_size_eq [Ord α] (arr' arr : Array α) {i j : Nat} {hi : i < arr'.size} {hj : j < arr'.size} (h_size : arr'.size = arr.size) : (bubbleSort.loop₁.loop₂ arr' ⟨i, hi⟩ ⟨j, hj⟩).size = arr.size := by
+    have loop₂_size_eq [Ord α] (arr' arr : Array α) {i j : Nat} {hi : i < arr'.size} {hj : j < arr'.size} (h_size : arr'.size = arr.size) : (bubbleSort.loop₁.loop₂ arr' ⟨i, hi⟩ ⟨j, hj⟩).size = arr.size := by
       generalize h : arr'.size - 1 - i - j = k
       induction k generalizing arr' i j
       case zero =>
@@ -62,18 +62,18 @@ def bubbleSort [Ord α] (arr : Array α) : Array α :=
               arr'.size - 1 - i - (j + 1) = (arr'.size - 1 - i - j) - 1 := rfl
               _ = n := Nat.sub_eq_of_eq_add h
           split
-          case h_1 hgt =>
+          case h_1 =>
             have h_size_swap : (arr'.swap ⟨j, hj⟩ ⟨↑(⟨j, hj⟩ : Fin arr'.size) + 1, bubbleSort.loop₁.loop₂.proof_2 arr' ⟨i, hi⟩ ⟨j, hj⟩ h₁⟩).size = arr'.size :=
               arr'.size_swap ⟨j, hj⟩ ⟨↑(⟨j, hj⟩ : Fin arr'.size) + 1, bubbleSort.loop₁.loop₂.proof_2 arr' ⟨i, hi⟩ ⟨j, hj⟩ h₁⟩
             apply ih
             exact Eq.trans h_size_swap h_size
             rw[h_size_swap]
             exact h_eq_n
-          case h_2 hlt =>
+          case h_2 =>
             apply ih
             exact h_size
             exact h_eq_n
-          case h_3 heq =>
+          case h_3 =>
             apply ih
             exact h_size
             exact h_eq_n
@@ -81,7 +81,6 @@ def bubbleSort [Ord α] (arr : Array α) : Array α :=
           exact h_size
     rw[loop₂_size_eq arr arr rfl]
     exact Nat.sub_succ_lt_self arr.size i h
-
   loop₁ arr 0
 
 #eval bubbleSort_for #[100,90,45,32,56,44]
