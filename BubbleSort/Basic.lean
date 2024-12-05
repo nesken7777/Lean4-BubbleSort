@@ -29,9 +29,9 @@ def bubbleSort [Ord α] (arr : Array α) : Array α :=
         haveI succ_j_lt_arr_size : j + 1 < arr.size := Nat.add_lt_of_lt_sub j_lt_arr_size_pred
         match Ord.compare arr[j] arr[↑j + 1] with
         |.gt =>
-          haveI swap_size_eq : arr.size = (arr.swap j ⟨↑j + 1, succ_j_lt_arr_size⟩).size := Eq.symm (Array.size_swap arr j ⟨↑j + 1, succ_j_lt_arr_size⟩)
-          haveI succ_j_lt_swapped : ↑j + 1 < (arr.swap j ⟨↑j + 1, succ_j_lt_arr_size⟩).size := Nat.lt_of_lt_of_eq succ_j_lt_arr_size swap_size_eq
-          loop₂ (arr.swap j ⟨j + 1, succ_j_lt_arr_size⟩) (i.cast swap_size_eq) ⟨↑j + 1, succ_j_lt_swapped⟩
+          haveI swap_size_eq : arr.size = (arr.swap j (j + 1)).size := Eq.symm (Array.size_swap arr j (j + 1))
+          haveI succ_j_lt_swapped : ↑j + 1 < (arr.swap j (j + 1)).size := Nat.lt_of_lt_of_eq succ_j_lt_arr_size swap_size_eq
+          loop₂ (arr.swap j (j + 1)) (i.cast swap_size_eq) ⟨↑j + 1, succ_j_lt_swapped⟩
         |.lt |.eq => loop₂ arr i (⟨j + 1, succ_j_lt_arr_size⟩)
       else
         arr
@@ -63,8 +63,7 @@ def bubbleSort [Ord α] (arr : Array α) : Array α :=
               _ = n := Nat.sub_eq_of_eq_add h
           split
           case h_1 =>
-            have h_size_swap : (arr'.swap ⟨j, hj⟩ ⟨↑(⟨j, hj⟩ : Fin arr'.size) + 1, bubbleSort.loop₁.loop₂.proof_2 arr' ⟨i, hi⟩ ⟨j, hj⟩ h₁⟩).size = arr'.size :=
-              arr'.size_swap ⟨j, hj⟩ ⟨↑(⟨j, hj⟩ : Fin arr'.size) + 1, bubbleSort.loop₁.loop₂.proof_2 arr' ⟨i, hi⟩ ⟨j, hj⟩ h₁⟩
+            have h_size_swap : (arr'.swap j (j + 1)).size = arr'.size := arr'.size_swap j (j + 1)
             apply ih
             exact Eq.trans h_size_swap h_size
             rw[h_size_swap]
