@@ -15,9 +15,9 @@ theorem lt_of_lt_sub {a b c : Nat} : a < b - c → a < b := by
 def bubbleSort_for [Inhabited α] [Ord α] (arr : Array α) : Array α := Id.run do
   let mut arr := arr
   for i in [0:arr.size] do
-    for j in [0:arr.size-1-i] do
-      match Ord.compare arr[j]! arr[j+1]! with
-      |.gt => arr := arr.swap! j (j + 1)
+    for j in [0:arr.size - 1 - i] do
+      match Ord.compare arr[j]! arr[j + 1]! with
+      |.gt => arr := arr.swapIfInBounds j (j + 1)
       |.lt |.eq => pure ()
   arr
 
@@ -49,7 +49,7 @@ def bubbleSort [Ord α] (arr : Array α) : Array α :=
         unfold bubbleSort.loop₁.loop₂
         split
         case isTrue h₁ =>
-          have h₃ : arr'.size - 1 - i - j ≠ 0 := by exact Nat.sub_ne_zero_iff_lt.mpr h₁
+          have h₃ : arr'.size - 1 - i - j ≠ 0 := Nat.sub_ne_zero_iff_lt.mpr h₁
           contradiction
         case isFalse =>
           exact h_size
