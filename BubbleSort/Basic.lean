@@ -1,3 +1,4 @@
+
 def bubbleSort [Ord α] (arr : Array α) : Array α :=
   let rec loop₁ [Ord α] (arr : Array α) (i : Nat) : Array α :=
     let rec loop₂ [Ord α] (arr : Array α) (i : Nat) (j : Nat) : Array α :=
@@ -19,9 +20,18 @@ def bubbleSort [Ord α] (arr : Array α) : Array α :=
       induction k generalizing arr' i j <;> unfold bubbleSort.loop₁.loop₂
       case zero =>
         split
-        case isTrue hlt => sorry
-        case isFalse hnlt => sorry
-      case succ n ih => sorry
+        case isTrue hlt =>
+          have hnez : arr'.size - 1 - i - j ≠ 0 := by exact Nat.sub_ne_zero_iff_lt.mpr hlt
+          contradiction
+        case isFalse hnlt => exact h_size
+      case succ n ih =>
+        split
+        case isTrue hlt =>
+          split
+          case h_1 => sorry
+          case h_2 => sorry
+          case h_3 => sorry
+        case isFalse hnlt => exact h_size
     rw[loop₂_size_eq]
     rename_i h
     exact Nat.sub_succ_lt_self arr.size i h
