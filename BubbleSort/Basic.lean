@@ -107,11 +107,13 @@ def bubbleSortif [LT α]  [∀(a b : α), Decidable (a > b)] (arr : Array α) : 
     exact Nat.sub_succ_lt_self arr.size i h
   loop₁ arr 0
 
-def bubbleSortfor [Inhabited α] [Ord α] (arr : Array α) : Array α := Id.run do
-  let mut arr := arr
-  for i in [0:arr.size] do
-    for j in [0:arr.size - 1 - i] do
-      match Ord.compare arr[j]! arr[j + 1]! with
-      |.gt => arr := arr.swapIfInBounds j (j + 1)
+def bubbleSortfor [Ord α] (arr : Array α) : Array α := Id.run do
+  let size := arr.size
+  let mut arr : { arr : Array α // arr.size = size } := ⟨arr, rfl⟩
+  for h₁ : i in [0:size] do
+    for h₂ : j in [0:size - 1 - i] do
+      have : j < size - 1 - i := h₂.upper
+      match Ord.compare arr.val[j] arr.val[j + 1] with
+      |.gt => arr := ⟨arr.val.swap j (j + 1), by rw[Array.size_swap, arr.property]⟩
       |.lt |.eq => pure ()
-  arr
+  arr.val
